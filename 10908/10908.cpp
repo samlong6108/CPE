@@ -5,6 +5,15 @@ using namespace std ;
 
 int M, N ;
 
+void pirnt_matrix(char **array_1, int M, int N){
+    for(int i=0; i<=M; i++){
+        for(int j=0; j<=N; j++){
+            printf("%c", array_1[i][j]);
+        }
+        printf("\n");
+    }
+}
+
 int main(){
     int Test_cases_number ;
     int Q ;
@@ -16,17 +25,18 @@ int main(){
         // printf("===================\n");
         printf("%d %d %d\n", M, N, Q) ;
         char array[M][N] ;
+        char **A = new char*[M] ;
+        for(int k=0; k<=M; k++){
+            A[k] = new char[N] ;
+        }
         for(int i=0; i<M; i++){
             for(int j=0; j<N; j++){
                 cin >> array[i][j] ;
             }
         }
-        // for(int i=0; i<M; i++){
-        //     for(int j=0; j<N; j++){
-        //         printf("%c", array[i][j]);
-        //     }
-        //     printf("\n");
-        // }        
+        
+        pirnt_matrix(A, M, N) ;
+
         for(int i=0; i<Q; i++){
             scanf("%d %d", &point_i, &point_j) ;
             // printf("==\n") ;
