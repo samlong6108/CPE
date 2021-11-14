@@ -3,27 +3,37 @@
 
 using namespace std ;
 
-void dfs(string& f, string& s, int col, int row, int** table, string seq, set<string>& seqs) {
-    if(col == 0 || row == 0) {
-        seq.insert(seq.begin(), f[col]);
+void dfs(string& f, string& s, int col, int row, int** table, string seq, set<string>& seqs, int max) {
+    if(seq.length()==max){
+        seqs.insert(seq);
+        return ; 
+    }
+
+    if(row == 0 || col==0) {
+        if(row==0){
+            seq.insert(seq.begin(), s[row]);
+        }
+        else if(col==0){
+            seq.insert(seq.begin(), f[col]);
+        }                
         seqs.insert(seq);
         return;
     }
-
+  
     if(f[col] == s[row]) {                
         seq.insert(seq.begin(), f[col]);
-        dfs(f, s, col-1, row-1, table, seq, seqs);
+        dfs(f, s, col-1, row-1, table, seq, seqs, max);
     }
     else {
         if(table[row-1][col] == table[row][col-1]) {
-            dfs(f, s, col-1, row, table, seq, seqs);
-            dfs(f, s, col, row-1, table, seq, seqs);            
+            dfs(f, s, col-1, row, table, seq, seqs, max);
+            dfs(f, s, col, row-1, table, seq, seqs, max);            
         }
         else if(table[row-1][col] > table[row][col-1]) {
-            dfs(f, s, col, row-1, table, seq, seqs);
+            dfs(f, s, col, row-1, table, seq, seqs, max);
         }
         else {
-            dfs(f, s, col-1, row, table, seq, seqs);
+            dfs(f, s, col-1, row, table, seq, seqs, max);
         }
     }
 }
@@ -31,35 +41,55 @@ void dfs(string& f, string& s, int col, int row, int** table, string seq, set<st
 int Howmanytimes(string LCS_temp, string First, string Second){
     int multiple_times = 1 ;
     int First_start = 0; 
-    int Second_start = 0 ;
-    for(int j=0; j<LCS_temp.size()-1; j++){
+    int Second_start = 0 ;    
+    for(int j=0; j<LCS_temp.size()-1; j++){        
         char Now = LCS_temp[j] ;
-        char Boundary = LCS_temp[j+1] ;
-        int First_choice = 1; 
-        int Second_choice = 1; 
-        for(int k=First_start+1; k<First.length(); k++){                    
+        char Boundary = LCS_temp[j+1] ;                
+        int First_choice = 0; 
+        int Second_choice = 0; 
+
+        for(int k=First_start; k<First.length(); k++){                
             if(First[k]==Boundary){
-                multiple_times*= (First_choice) ;                                                                                                
-                First_start +=1 ;
-                break ;
+                if(First_choice!=0){
+                    multiple_times*= (First_choice) ;                                                                                                                
+                    break ;
+                }
+                else{
+                    First_start += 1 ;                    
+                    First_choice += 1 ;  
+                    continue ;
+                }                
             }
-            else if(First[k]==Now){
+            else if(First[k]==Now){                
                 First_choice += 1 ;                                                
-            }                                         
-            First_start +=1 ;                    
-        }
-        for(int k=Second_start+1; k<Second.length(); k++){                                        
+                First_start +=1 ;
+
+            }
+            else{
+                First_start += 1 ;
+            }                                                                         
+        }                
+        for(int k=Second_start; k<Second.length(); k++){                          
             if(Second[k]==Boundary){
-                multiple_times*= Second_choice ;                    
-                Second_start += 1 ;
-                break ;
+                if(Second_choice!=0){
+                    multiple_times*= Second_choice ;                                    
+                    break ;
+                }
+                else{
+                    Second_start += 1 ;
+                    Second_choice += 1 ;  
+                    continue ;
+                }                                
             }
             else if(Second[k]==Now){
                 Second_choice += 1 ;                        
+                Second_start += 1 ;
             }
-            Second_start += 1 ;
+            else{
+                Second_start += 1 ;
+            }            
         }
-    }
+    }    
     return multiple_times ;
 }
 
@@ -127,16 +157,19 @@ int main(){
         for(int temp=0; temp<Second.length(); temp++){
             ptr_table[temp] = Table[temp] ;
         }
-                
-        dfs(First, Second, First.length()-1, Second.length()-1, ptr_table, seq, seqs) ;        
+        int total_number = 0 ;
+        int max_number = Table[Second.length()-1][First.length()-1] ;
+        dfs(First, Second, First.length()-1, Second.length()-1, ptr_table, seq, seqs, max_number) ;        
         for(set<string>::iterator it=seqs.begin(); it!=seqs.end(); it++){
             cout << "===========" << endl ;                     
             string LCS_temp ;
             LCS_temp = *it ; 
-            int multiple_times ;
+            int multiple_times = 1 ;
             cout << LCS_temp << endl ;
             multiple_times = Howmanytimes(LCS_temp, First, Second) ;
+            total_number += multiple_times ;
             cout << multiple_times << endl ;            
         }
+        cout << total_number << endl ;
     }
 }
