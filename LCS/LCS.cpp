@@ -101,10 +101,11 @@ int main(){
         string First, Second ;
         getline(cin, First); 
         getline(cin, Second);
-        cout << First << endl ;
-        cout << Second << endl ;
+        // cout << First << endl ;
+        // cout << Second << endl ;
         int Table[Second.length()][First.length()] ;
         int Table_direction[Second.length()][First.length()] ;
+        vector<int> number_times ;
 
         memset(Table, 0, sizeof(int) * Second.length() * First.length());
         memset(Table_direction, 0, sizeof(int) * Second.length() * First.length());
@@ -137,19 +138,19 @@ int main(){
                 }
             }
         }
-        cout << "  " ;
-        for(int i=0; i<First.length(); i++){
-            cout << First[i] << " ";
-        }
-        cout << endl ;
+        // cout << "  " ;
+        // for(int i=0; i<First.length(); i++){
+            // cout << First[i] << " ";
+        // }
+        // cout << endl ;
 
-        for(int i=0; i<Second.length(); i++){
-            cout << Second[i] << " ";
-            for(int j=0; j<First.length(); j++){
-                cout << Table[i][j] << " " ;            
-            }
-            cout << endl ;
-        }
+        // for(int i=0; i<Second.length(); i++){
+            // cout << Second[i] << " ";
+            // for(int j=0; j<First.length(); j++){
+                // cout << Table[i][j] << " " ;            
+            // }
+            // cout << endl ;
+        // }
                 
         set<string> seqs ;
         string seq ;        
@@ -161,15 +162,23 @@ int main(){
         int max_number = Table[Second.length()-1][First.length()-1] ;
         dfs(First, Second, First.length()-1, Second.length()-1, ptr_table, seq, seqs, max_number) ;        
         for(set<string>::iterator it=seqs.begin(); it!=seqs.end(); it++){
-            cout << "===========" << endl ;                     
+            // cout << "===========" << endl ;                     
             string LCS_temp ;
             LCS_temp = *it ; 
             int multiple_times = 1 ;
-            cout << LCS_temp << endl ;
+            // cout << LCS_temp << endl ;
             multiple_times = Howmanytimes(LCS_temp, First, Second) ;
+            number_times.push_back(multiple_times) ;
             total_number += multiple_times ;
-            cout << multiple_times << endl ;            
+            // cout << multiple_times << endl ;            
         }
-        cout << total_number << endl ;
+        cout << max_number << " " << total_number << endl ;
+        int index = 0 ;
+        for(set<string>::iterator it=seqs.begin(); it!=seqs.end(); it++){
+            for(int n=0; n<number_times[index]; n++){
+                cout << *it << endl ;
+            }
+            index +=1 ;
+        }
     }
 }
