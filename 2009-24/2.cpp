@@ -14,7 +14,7 @@ int main(){
             float position_x ;
             float position_y ;
             scanf("%f %f", &position_x, &position_y)  ;
-            v.push_back(pair<float, float>(position_x, position_y)) ;
+            v.push_back(make_pair(position_x, position_y)) ;
         }
 
         // for(int i=0; i<point.size() ; i++){
@@ -37,14 +37,16 @@ int main(){
                 if(finding==mapping.end()){
                     float temp[] = {b} ; 
                     set<float> second(temp, temp+1) ;
-                    mapping.insert(pair<float, set<float> >(a, second)) ;
+                    mapping.insert(make_pair(a, second)) ;
                     continue ;
                 }
-
-                set<float> temp = finding->second ;
-                temp.insert(b) ;
-                mapping.erase(a) ;
-                mapping.insert(pair<float, set<float> >(a, temp)) ;
+                else{
+                    set<float> temp = finding->second ;
+                    temp.insert(b) ;
+                    mapping.erase(a) ;
+                    mapping.insert(make_pair(a, temp)) ;
+                }
+                
             }
         }
         int count = 0 ;
